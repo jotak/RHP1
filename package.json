@@ -8,6 +8,7 @@
     },
     "main"         : "main.js",
     "dependencies" : {
+        "mongoose"   : "~4.4.19",
         "q"          : ">=1.0.0",
         "express"    : "~4.13.3",
         "body-parser": "~1.13.3"
@@ -16,8 +17,7 @@
         "node"       : ">=0.10.0"
     },
     "scripts": {
-        "pretest": "tsc test/*Test.ts --module commonjs",
-        "prepublish": "tsc index.ts --module commonjs ",
+        "pretest": "tsc test/**/*Test.ts --module commonjs",
         "test": "mocha"
     }
 }
