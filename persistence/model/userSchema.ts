@@ -32,8 +32,4 @@ export default class UserSchema {
             picture: pictureSchema
         });
     }
-
-    public static toModel(): mongoose.Model<UserModel> {
-        return mongoose.model<UserModel>("user", UserSchema.build());
-    }
 }
