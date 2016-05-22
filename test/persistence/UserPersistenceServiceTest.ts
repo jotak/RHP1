@@ -162,6 +162,7 @@ describe('UserPersistenceService', () => {
     }];
 
     before(done => {
+        // Initiate mongo client on test database
         let mongoClient = new MongoClient("localhost", 27017, "rhp1_test");
         mongoClient.status().then(status => {
             if (status !== 1) {
@@ -172,11 +173,13 @@ describe('UserPersistenceService', () => {
         .catch(err => {
             done(new Error('Error: ' + err));
         });
+        // Instanciate the service to test
         userPersistenceService = new UserPersistenceService(mongoClient);
         done();
     });
 
     beforeEach(done => {
+        // Reset database to hard-coded set
         userPersistenceService.reset(users).then(() => done()).fail(err => done(err));
     });
 
