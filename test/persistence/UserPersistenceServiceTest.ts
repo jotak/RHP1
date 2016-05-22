@@ -87,4 +87,28 @@ describe('UserPersistenceService', () => {
                 });
         });
     });
+
+    describe('#delete', () => {
+        it('should delete user', (done) => {
+            userPersistenceService.delete("tinylion877")
+                .then(userPersistenceService.count.bind(userPersistenceService))
+                .then(count => {
+                    if (count != 99) {
+                        done(new Error('Expecting 99 items, got ' + count));
+                        return;
+                    }
+                })
+                .then(() => userPersistenceService.getByUsername("tinylion877"))
+                .then(user => {
+                    if (user !== null) {
+                        done(new Error('Expecting null user'));
+                        return;
+                    }
+                    done();
+                })
+                .catch(err => {
+                    done(new Error('Error: ' + err));
+                });
+        });
+    });
 });

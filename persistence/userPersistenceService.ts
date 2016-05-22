@@ -12,16 +12,40 @@ export default class UserPersistenceService {
         this.userModel = mongoClient.buildModel("users", UserSchema.build());
     }
 
-    public create(user: User) {
-        // TODO
+    public create(user: User): q.Promise<void> {
+        var deferred: q.Deferred<void> = q.defer<void>();
+        this.userModel.create({"user": user}, err => {
+            if (err) {
+                deferred.reject(err);
+            } else {
+                deferred.resolve();
+            }
+        })
+        return deferred.promise;
     }
 
-    public update(user: User) {
-        // TODO
+    public update(user: User): q.Promise<void> {
+        var deferred: q.Deferred<void> = q.defer<void>();
+        this.userModel.update({"user.username": user.username}, {"user": user}, err => {
+            if (err) {
+                deferred.reject(err);
+            } else {
+                deferred.resolve();
+            }
+        })
+        return deferred.promise;
     }
 
-    public delete(username: string) {
-        // TODO
+    public delete(username: string): q.Promise<void> {
+        var deferred: q.Deferred<void> = q.defer<void>();
+        this.userModel.remove({"user.username": username}, err => {
+            if (err) {
+                deferred.reject(err);
+            } else {
+                deferred.resolve();
+            }
+        })
+        return deferred.promise;
     }
 
     public getByUsername(username: string): q.Promise<User> {
@@ -30,7 +54,7 @@ export default class UserPersistenceService {
             if (err) {
                 deferred.reject(err);
             } else {
-                deferred.resolve(res.user);
+                deferred.resolve(res ? res.user : null);
             }
         }).lean();
         return deferred.promise;
