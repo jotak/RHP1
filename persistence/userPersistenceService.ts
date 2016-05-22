@@ -9,7 +9,10 @@ export default class UserPersistenceService {
     private userModel: mongoose.Model<UserModel>;
 
     public constructor(mongoClient: MongoClient) {
-        this.userModel = mongoClient.buildModel("users", UserSchema.build());
+        this.userModel = mongoClient.buildModel(
+            "users",
+            new mongoose.Schema({"user": UserSchema.build()})
+        );
     }
 
     public create(user: User): q.Promise<void> {
@@ -83,6 +86,29 @@ export default class UserPersistenceService {
                 deferred.reject(err);
             } else {
                 deferred.resolve(count);
+            }
+        });
+        return deferred.promise;
+    }
+
+    // For testing only
+    public reset(users: User[]): q.Promise<void> {
+        var deferred: q.Deferred<void> = q.defer<void>();
+        var Model = this.userModel;
+        var collection = users.map(u => {
+            return new Model({"user": u});
+        });
+        this.userModel.remove({}, err => {
+            if (err) {
+                deferred.reject(err);
+            } else {
+                Model.create(collection, err => {
+                    if (err) {
+                        deferred.reject(err);
+                    } else {
+                        deferred.resolve();
+                    }
+                });
             }
         });
         return deferred.promise;
