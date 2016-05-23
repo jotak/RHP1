@@ -15,39 +15,48 @@ export default class UserPersistenceService {
         );
     }
 
-    public create(user: User): q.Promise<void> {
-        var deferred: q.Deferred<void> = q.defer<void>();
+    public create(user: User): q.Promise<any> {
+        var deferred: q.Deferred<any> = q.defer<any>();
         this.userModel.create({"user": user}, err => {
             if (err) {
-                deferred.reject(err);
+                if (err.code == 11000) {
+                    // Duplicate key => conflict
+                    deferred.resolve({conflict: true})
+                } else {
+                    deferred.reject(err);
+                }
             } else {
-                deferred.resolve();
+                deferred.resolve({});
             }
         })
         return deferred.promise;
     }
 
-    public update(user: User): q.Promise<void> {
-        var deferred: q.Deferred<void> = q.defer<void>();
-        this.userModel.update({"user.username": user.username}, {"user": user}, err => {
+    public update(user: User): q.Promise<number> {
+        var deferred: q.Deferred<number> = q.defer<number>();
+        this.userModel.update({"user.username": user.username}, {"user": user}, (err, nbUpdates) => {
             if (err) {
                 deferred.reject(err);
             } else {
-                deferred.resolve();
+                // Note: outdated typescript definition here; quick workaround
+                let cast: any = nbUpdates;
+                deferred.resolve(cast.n);
             }
         })
         return deferred.promise;
     }
 
-    public delete(username: string): q.Promise<void> {
-        var deferred: q.Deferred<void> = q.defer<void>();
-        this.userModel.remove({"user.username": username}, err => {
+    public delete(username: string): q.Promise<number> {
+        var deferred: q.Deferred<number> = q.defer<number>();
+        // Note: outdated typescript definition here; quick workaround
+        let func: any = (err, result) => {
             if (err) {
                 deferred.reject(err);
             } else {
-                deferred.resolve();
+                deferred.resolve(result.result.n);
             }
-        })
+        };
+        this.userModel.remove({"user.username": username}, func);
         return deferred.promise;
     }
 

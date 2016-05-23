@@ -50,12 +50,12 @@ export default class RestServer {
 
     private registerGetByUsername(app: express.Application) {
         var self = this;
-        app.get("/users/:userName", (req, res) => {
-            self.userPersistenceService.getByUsername(req.params.userName)
+        app.get("/users/:username", (req, res) => {
+            self.userPersistenceService.getByUsername(req.params.username)
                 .then(user => {
                     // TODO: hide passwords??
                     if (user === null) {
-                        res.status(404).send("User " + req.params.userName + " not found");
+                        res.status(404).send("User " + req.params.username + " not found");
                     } else {
                         res.json(user);
                     }
@@ -73,8 +73,13 @@ export default class RestServer {
         var self = this;
         app.post("/users/", (req, res) => {
             self.userPersistenceService.create(req.body)
-                // TODO: manage conflict, manage invalid body
-                .then(() => res.send("OK"))
+                .then(result => {
+                    if (result.conflict) {
+                        res.status(409).send("User " + req.body.username + " already exists.");
+                        return;
+                    }
+                    res.send("OK");
+                })
                 .fail(reason => {
                     console.error("Application error: " + reason.message);
                     // TODO: more accurate error codes depending on error (503...)
@@ -93,8 +98,13 @@ export default class RestServer {
                 return;
             }
             self.userPersistenceService.update(req.body)
-                // TODO: manage user not found, manage invalid body
-                .then(() => res.send("OK"))
+                .then(nbUpdated => {
+                    if (nbUpdated === 0) {
+                        res.status(404).send("User " + req.params.username + " not found");
+                        return;
+                    }
+                    res.send("OK");
+                })
                 .fail(reason => {
                     console.error("Application error: " + reason.message);
                     // TODO: more accurate error codes depending on error (503...)
@@ -106,10 +116,15 @@ export default class RestServer {
 
     private registerDelete(app: express.Application) {
         var self = this;
-        app.delete("/users/:userName", (req, res) => {
-            self.userPersistenceService.delete(req.params.userName)
-                // TODO: manage user not found
-                .then(() => res.send("OK"))
+        app.delete("/users/:username", (req, res) => {
+            self.userPersistenceService.delete(req.params.username)
+                .then(nbDeleted => {
+                    if (nbDeleted === 0) {
+                        res.status(404).send("User " + req.params.username + " not found");
+                        return;
+                    }
+                    res.send("OK");
+                })
                 .fail(reason => {
                     console.error("Application error: " + reason.message);
                     // TODO: more accurate error codes depending on error (503...)
