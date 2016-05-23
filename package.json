@@ -1,23 +1,26 @@
 {
-    "name"         : "RHP1",
-    "version"      : "0.1.0",
-    "author"       : "Joël Takvorian <joel.takvorian@qaraywa.net> (https://github.com/jotak)",
-    "repository"   : {
-        "type"       : "git",
-        "url"        : "https://github.com/jotak/RHP1"
-    },
-    "main"         : "main.js",
-    "dependencies" : {
-        "mongoose"   : "~4.4.19",
-        "q"          : ">=1.0.0",
-        "express"    : "~4.13.3",
-        "body-parser": "~1.13.3"
-    },
-    "engines"      : {
-        "node"       : ">=0.10.0"
-    },
-    "scripts": {
-        "pretest": "tsc test/**/*Test.ts --module commonjs",
-        "test": "mocha"
-    }
+  "name": "RHP1",
+  "version": "0.1.0",
+  "author": "Joël Takvorian <joel.takvorian@qaraywa.net> (https://github.com/jotak)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jotak/RHP1"
+  },
+  "main": "main.js",
+  "dependencies": {
+    "mongoose": "~4.4.19",
+    "q": ">=1.0.0",
+    "express": "~4.13.3",
+    "body-parser": "~1.13.3"
+  },
+  "devDependencies": {
+    "supertest": "^1.2.0"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "pretest": "tsc test/**/*Test.ts --module commonjs",
+    "test": "mocha"
+  }
 }
