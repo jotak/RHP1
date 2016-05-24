@@ -4,6 +4,14 @@ import UserPersistenceService from '../persistence/userPersistenceService';
 
 "use strict";
 
+// Note: it may be necessary to authenticate the client application / check for session tokens if the API is public
+//      for instance through OAuth2
+// Other note about security: clear passwords are transiting here, that's most probably bad.
+// A solution would be to receive only password (on SSL) on Create, compute sha256 and store it, without clear password
+// I don't see the interest of storing both SHA1, SHA256 and MD5.
+// The CRUD Update would not update password. A new route would be specially provided for that.
+// All reading methods would clear SHA from results.
+// A new route would allow to authenticate a user, taking clear password as posted parameter (through SSL).
 export default class RestServer {
 
     private userPersistenceService: UserPersistenceService;
@@ -36,7 +44,6 @@ export default class RestServer {
         var self = this;
         // full list here but we may want partial list, or paginated... depends on usage
         app.get("/users", (req, res) => {
-            // TODO: hide passwords??
             self.userPersistenceService.all()
                 .then(users => res.json(users))
                 .fail(reason => {
@@ -53,7 +60,6 @@ export default class RestServer {
         app.get("/users/:username", (req, res) => {
             self.userPersistenceService.getByUsername(req.params.username)
                 .then(user => {
-                    // TODO: hide passwords??
                     if (user === null) {
                         res.status(404).send("User " + req.params.username + " not found");
                     } else {
