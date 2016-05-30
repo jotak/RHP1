@@ -1,11 +1,3 @@
-/// <reference path="../../typings/globals/mocha/index.d.ts" />
-/// <reference path="../../typings/globals/supertest/index.d.ts" />
-/// <reference path="../../typings/globals/superagent/index.d.ts" />
-/// <reference path="../../typings/globals/express/index.d.ts" />
-/// <reference path="../../typings/globals/serve-static/index.d.ts" />
-/// <reference path="../../typings/globals/express-serve-static-core/index.d.ts" />
-/// <reference path="../../typings/globals/body-parser/index.d.ts" />
-/// <reference path="../../typings/modules/mime/index.d.ts" />
 "use strict";
 var request = require('supertest');
 var userPersistenceService_1 = require('../../persistence/userPersistenceService');
@@ -17,8 +9,7 @@ describe('RestServer', function () {
     var userPersistenceService;
     var url = "http://localhost:8081";
     before(function (done) {
-        // Initiate mongo client on test database
-        var mongoClient = new mongoClient_1["default"]("localhost", 27017, "rhp1_test");
+        var mongoClient = new mongoClient_1.default("localhost", 27017, "rhp1_test");
         mongoClient.status().then(function (status) {
             if (status !== 1) {
                 done(new Error("Could not connect to DB. Connection status is " + status));
@@ -28,15 +19,13 @@ describe('RestServer', function () {
             .catch(function (err) {
             done(new Error('Error: ' + err));
         });
-        // Instanciate the service to test
-        userPersistenceService = new userPersistenceService_1["default"](mongoClient);
-        restServer = new restServer_1["default"](userPersistenceService);
+        userPersistenceService = new userPersistenceService_1.default(mongoClient);
+        restServer = new restServer_1.default(userPersistenceService);
         restServer.start(8081);
         done();
     });
     beforeEach(function (done) {
-        // Reset database to hard-coded set
-        userPersistenceService.reset(UsersTestDataSet_1["default"].INITIAL_USERS).then(function () { return done(); }).fail(function (err) { return done(err); });
+        userPersistenceService.reset(UsersTestDataSet_1.default.INITIAL_USERS).then(function () { return done(); }).fail(function (err) { return done(err); });
     });
     describe('GET /users/', function () {
         it('should get all users', function (done) {
@@ -126,12 +115,11 @@ describe('RestServer', function () {
     describe('POST /users/', function () {
         it('should create user', function (done) {
             request(url).post('/users/')
-                .send(UsersTestDataSet_1["default"].FLENN_FLORES)
+                .send(UsersTestDataSet_1.default.FLENN_FLORES)
                 .expect(200)
                 .end(function (err, res) {
                 if (err)
                     throw err;
-                // Check it was added
                 request(url).get('/users/')
                     .end(function (err, res) {
                     if (err)
@@ -148,19 +136,18 @@ describe('RestServer', function () {
     describe('POST /users/', function () {
         it('should not create conflicting user', function (done) {
             request(url).post('/users/')
-                .send(UsersTestDataSet_1["default"].UPDATED_ANDY_ADAMS)
+                .send(UsersTestDataSet_1.default.UPDATED_ANDY_ADAMS)
                 .expect(409, done);
         });
     });
     describe('POST /users/beautifulfish360', function () {
         it('should update user', function (done) {
             request(url).post('/users/beautifulfish360')
-                .send(UsersTestDataSet_1["default"].UPDATED_ANDY_ADAMS)
+                .send(UsersTestDataSet_1.default.UPDATED_ANDY_ADAMS)
                 .expect(200)
                 .end(function (err, res) {
                 if (err)
                     throw err;
-                // Check it was added
                 request(url).get('/users/')
                     .end(function (err, res) {
                     if (err)
@@ -177,14 +164,14 @@ describe('RestServer', function () {
     describe('POST /users/blackfrog555', function () {
         it('should not update user not found', function (done) {
             request(url).post('/users/blackfrog555')
-                .send(UsersTestDataSet_1["default"].FLENN_FLORES)
+                .send(UsersTestDataSet_1.default.FLENN_FLORES)
                 .expect(404, done);
         });
     });
     describe('POST /users/beautifulfish360', function () {
         it('should not update wrong user', function (done) {
             request(url).post('/users/tinywolf709')
-                .send(UsersTestDataSet_1["default"].UPDATED_ANDY_ADAMS)
+                .send(UsersTestDataSet_1.default.UPDATED_ANDY_ADAMS)
                 .expect(400, done);
         });
     });
@@ -195,7 +182,6 @@ describe('RestServer', function () {
                 .end(function (err, res) {
                 if (err)
                     throw err;
-                // Check it was deleted
                 request(url).get('/users/')
                     .end(function (err, res) {
                     if (err)

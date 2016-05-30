@@ -12,5 +12,5 @@ var PictureSchema = (function () {
     };
     return PictureSchema;
 }());
-exports.__esModule = true;
-exports["default"] = PictureSchema;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = PictureSchema;

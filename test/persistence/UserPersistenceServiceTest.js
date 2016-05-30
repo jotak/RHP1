@@ -1,7 +1,3 @@
-/// <reference path="../../typings/globals/mocha/index.d.ts" />
-/// <reference path="../../typings/globals/node/index.d.ts" />
-/// <reference path="../../typings/globals/mongoose/index.d.ts" />
-/// <reference path="../../typings/globals/q/index.d.ts" />
 "use strict";
 var mongoClient_1 = require('../../persistence/mongoClient');
 var userPersistenceService_1 = require('../../persistence/userPersistenceService');
@@ -9,8 +5,7 @@ var UsersTestDataSet_1 = require('../UsersTestDataSet');
 describe('UserPersistenceService', function () {
     var userPersistenceService;
     before(function (done) {
-        // Initiate mongo client on test database
-        var mongoClient = new mongoClient_1["default"]("localhost", 27017, "rhp1_test");
+        var mongoClient = new mongoClient_1.default("localhost", 27017, "rhp1_test");
         mongoClient.status().then(function (status) {
             if (status !== 1) {
                 done(new Error("Could not connect to DB. Connection status is " + status));
@@ -20,13 +15,11 @@ describe('UserPersistenceService', function () {
             .catch(function (err) {
             done(new Error('Error: ' + err));
         });
-        // Instanciate the service to test
-        userPersistenceService = new userPersistenceService_1["default"](mongoClient);
+        userPersistenceService = new userPersistenceService_1.default(mongoClient);
         done();
     });
     beforeEach(function (done) {
-        // Reset database to hard-coded set
-        userPersistenceService.reset(UsersTestDataSet_1["default"].INITIAL_USERS).then(function () { return done(); }).fail(function (err) { return done(err); });
+        userPersistenceService.reset(UsersTestDataSet_1.default.INITIAL_USERS).then(function () { return done(); }).fail(function (err) { return done(err); });
     });
     describe('#count', function () {
         it('should count users', function (done) {
@@ -113,7 +106,7 @@ describe('UserPersistenceService', function () {
     });
     describe('#create', function () {
         it('should create user', function (done) {
-            userPersistenceService.create(UsersTestDataSet_1["default"].FLENN_FLORES)
+            userPersistenceService.create(UsersTestDataSet_1.default.FLENN_FLORES)
                 .then(userPersistenceService.count.bind(userPersistenceService))
                 .then(function (count) {
                 if (count != 6) {
@@ -136,7 +129,7 @@ describe('UserPersistenceService', function () {
     });
     describe('#update', function () {
         it('should update user', function (done) {
-            userPersistenceService.update(UsersTestDataSet_1["default"].UPDATED_ANDY_ADAMS)
+            userPersistenceService.update(UsersTestDataSet_1.default.UPDATED_ANDY_ADAMS)
                 .then(userPersistenceService.count.bind(userPersistenceService))
                 .then(function (count) {
                 if (count != 5) {

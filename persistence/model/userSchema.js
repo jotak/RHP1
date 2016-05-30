@@ -4,15 +4,13 @@ var nameInfoSchema_1 = require('./nameInfoSchema');
 var locationSchema_1 = require('./locationSchema');
 var pictureSchema_1 = require('./pictureSchema');
 "use strict";
-// Unfortunately it looks like this kind of duplication is necessary for mongoose; cannot use the typescript interfaces definition at runtime.
-// Maybe if this persistence layer was used in an extensive way, we should build some automatic Schema code generator from the typescript interface.
 var UserSchema = (function () {
     function UserSchema() {
     }
     UserSchema.build = function () {
-        var nameInfoSchema = nameInfoSchema_1["default"].build();
-        var locationSchema = locationSchema_1["default"].build();
-        var pictureSchema = pictureSchema_1["default"].build();
+        var nameInfoSchema = nameInfoSchema_1.default.build();
+        var locationSchema = locationSchema_1.default.build();
+        var pictureSchema = pictureSchema_1.default.build();
         return new mongoose.Schema({
             gender: String,
             name: nameInfoSchema,
@@ -34,5 +32,5 @@ var UserSchema = (function () {
     };
     return UserSchema;
 }());
-exports.__esModule = true;
-exports["default"] = UserSchema;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = UserSchema;

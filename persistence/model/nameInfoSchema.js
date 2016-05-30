@@ -12,5 +12,5 @@ var NameInfoSchema = (function () {
     };
     return NameInfoSchema;
 }());
-exports.__esModule = true;
-exports["default"] = NameInfoSchema;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = NameInfoSchema;

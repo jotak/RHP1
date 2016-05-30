@@ -13,5 +13,5 @@ var LocationSchema = (function () {
     };
     return LocationSchema;
 }());
-exports.__esModule = true;
-exports["default"] = LocationSchema;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = LocationSchema;

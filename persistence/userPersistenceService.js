@@ -4,14 +4,13 @@ var q = require('q');
 var userSchema_1 = require('./model/userSchema');
 var UserPersistenceService = (function () {
     function UserPersistenceService(mongoClient) {
-        this.userModel = mongoClient.buildModel("users", new mongoose.Schema({ "user": userSchema_1["default"].build() }));
+        this.userModel = mongoClient.buildModel("users", new mongoose.Schema({ "user": userSchema_1.default.build() }));
     }
     UserPersistenceService.prototype.create = function (user) {
         var deferred = q.defer();
         this.userModel.create({ "user": user }, function (err) {
             if (err) {
                 if (err.code == 11000) {
-                    // Duplicate key => conflict
                     deferred.resolve({ conflict: true });
                 }
                 else {
@@ -31,7 +30,6 @@ var UserPersistenceService = (function () {
                 deferred.reject(err);
             }
             else {
-                // Note: outdated typescript definition here; quick workaround
                 var cast = nbUpdates;
                 deferred.resolve(cast.n);
             }
@@ -40,7 +38,6 @@ var UserPersistenceService = (function () {
     };
     UserPersistenceService.prototype.delete = function (username) {
         var deferred = q.defer();
-        // Note: outdated typescript definition here; quick workaround
         var func = function (err, result) {
             if (err) {
                 deferred.reject(err);
@@ -91,7 +88,6 @@ var UserPersistenceService = (function () {
         });
         return deferred.promise;
     };
-    // For testing only
     UserPersistenceService.prototype.reset = function (users) {
         var deferred = q.defer();
         var Model = this.userModel;
@@ -117,5 +113,5 @@ var UserPersistenceService = (function () {
     };
     return UserPersistenceService;
 }());
-exports.__esModule = true;
-exports["default"] = UserPersistenceService;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = UserPersistenceService;

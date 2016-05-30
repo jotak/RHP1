@@ -217,5 +217,5 @@ var UsersTestDataSet = (function () {
     };
     return UsersTestDataSet;
 }());
-exports.__esModule = true;
-exports["default"] = UsersTestDataSet;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = UsersTestDataSet;

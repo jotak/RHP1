@@ -23,5 +23,5 @@ var MongoClient = (function () {
     };
     return MongoClient;
 }());
-exports.__esModule = true;
-exports["default"] = MongoClient;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = MongoClient;
