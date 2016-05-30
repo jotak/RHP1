@@ -1,0 +1,11 @@
+"use strict";
+var userPersistenceService_1 = require('./persistence/userPersistenceService');
+var mongoClient_1 = require('./persistence/mongoClient');
+var restServer_1 = require('./rest-api/restServer');
+"use strict";
+var mongoClient = new mongoClient_1.default("localhost", 27017, "rhp1");
+var userPersistenceService = new userPersistenceService_1.default(mongoClient);
+var restServer = new restServer_1.default(userPersistenceService);
+var httpPort = 8080;
+restServer.start(httpPort);
+console.log("Server listening on port " + httpPort);
